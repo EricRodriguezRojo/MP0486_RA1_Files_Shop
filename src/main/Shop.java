@@ -17,8 +17,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import dao.Dao;
+import dao.DaoImplFile;
+
 public class Shop {
 	private Amount cash = new Amount(100.00);
+	private Dao dao = new DaoImplFile();
 //	private Product[] inventory;
 	private ArrayList<Product> inventory;
 	private int numberProducts;
@@ -206,78 +210,11 @@ public class Shop {
 //		addProduct(new Product("Hamburguesa", new Amount(30.00), true, 30));
 //		addProduct(new Product("Fresa", new Amount(5.00), true, 20));
 		// now read from file
-		this.readInventory();
+		inventory = this.dao.getInventory();
+		this.showInventory();
 	}
 
-	/**
-	 * read inventory from file
-	 */
-	private void readInventory() {
-		// locate file, path and name
-		File f = new File(System.getProperty("user.dir") + File.separator + "files/inputInventory.txt");
-		
-		try {			
-			// wrap in proper classes
-			FileReader fr;
-			fr = new FileReader(f);				
-			BufferedReader br = new BufferedReader(fr);
-			
-			// read first line
-			String line = br.readLine();
-			
-			// process and read next line until end of file
-			while (line != null) {
-				// split in sections
-				String[] sections = line.split(";");
-				
-				String name = "";
-				double wholesalerPrice=0.0;
-				int stock = 0;
-				
-				// read each sections
-				for (int i = 0; i < sections.length; i++) {
-					// split data in key(0) and value(1) 
-					String[] data = sections[i].split(":");
-					
-					switch (i) {
-					case 0:
-						// format product name
-						name = data[1];
-						break;
-						
-					case 1:
-						// format price
-						wholesalerPrice = Double.parseDouble(data[1]);
-						break;
-						
-					case 2:
-						// format stock
-						stock = Integer.parseInt(data[1]);
-						break;
-						
-					default:
-						break;
-					}
-				}
-				// add product to inventory
-				addProduct(new Product(name, new Amount(wholesalerPrice), true, stock));
-				
-				// read next line
-				line = br.readLine();
-			}
-			fr.close();
-			br.close();
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
+	
 	/**
 	 * show current total cash
 	 */
@@ -491,7 +428,7 @@ public class Shop {
 				pw.write(firstLine.toString());
 				fw.write("\n");
 				
-				// format second line TO BE -> 1;Products=Manzana,20.0€;Fresa,10.0€;Hamburguesa,60.0€;
+				// format line TO BE -> 1;Products=Manzana,20.0€;Fresa,10.0€;Hamburguesa,60.0€;
 				// build products line
 				StringBuilder productLine= new StringBuilder();
 				for (Product product : sale.getProducts()) {
@@ -574,5 +511,7 @@ public class Shop {
 		return null;
 
 	}
+	
+
 
 }
