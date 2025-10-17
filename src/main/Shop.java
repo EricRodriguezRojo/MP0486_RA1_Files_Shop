@@ -117,6 +117,7 @@ public class Shop {
 			System.out.println("===========================");
 			System.out.println("Menu principal miTienda.com");
 			System.out.println("===========================");
+			System.out.println("0) Exportar inventario");
 			System.out.println("1) Contar caja");
 			System.out.println("2) Añadir producto");
 			System.out.println("3) Añadir stock");
@@ -510,6 +511,10 @@ public class Shop {
 		}
 		return null;
 
+	}
+	
+	public boolean writeInventory() {
+		return dao.writeInventory(inventory);
 	}
 	
 
