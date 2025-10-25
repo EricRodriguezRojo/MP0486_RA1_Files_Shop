@@ -116,7 +116,7 @@ public class DaoImplFile implements Dao {
 		try {
 			// wrap in proper classes
 			FileWriter fw;
-			fw = new FileWriter(f, true);
+			fw = new FileWriter(f, false);
 			PrintWriter pw = new PrintWriter(fw);
 			
 			// write line by line
