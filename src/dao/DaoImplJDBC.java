@@ -1,18 +1,28 @@
 package dao;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
+import model.Amount;
 import model.Employee;
 import model.Product;
 
 public class DaoImplJDBC implements Dao {
 	Connection connection;
+	private static final String getInventory_query = "SELECT product, price, available, Stock FROM inventory";
 
 	@Override
 	public void connect() {
@@ -64,16 +74,31 @@ public class DaoImplJDBC implements Dao {
     	return employee;
 	}
 
-	@Override
+	@Override	
 	public ArrayList<Product> getInventory() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Product> inventory = new ArrayList<>();
+		try (PreparedStatement preparedStatement = connection.prepareStatement(getInventory_query)) {
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    String name = resultSet.getString("product");
+                    double price = resultSet.getDouble("price");
+                    boolean available = resultSet.getBoolean("available"); 
+                    int stock = resultSet.getInt("Stock");
+                    Product product = new Product(name, new Amount(price), available, stock);
+                    inventory.add(product);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		
+		return inventory;
 	}
 
 	@Override
 	public boolean writeInventory(ArrayList<Product> ProductsList) {
-		// TODO Auto-generated method stub
 		return false;
+
 	}
 
 }
