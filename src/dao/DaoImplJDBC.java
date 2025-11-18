@@ -22,7 +22,7 @@ import model.Product;
 
 public class DaoImplJDBC implements Dao {
 	Connection connection;
-	private static final String getInventory_query = "SELECT product, price, available, Stock FROM inventory";
+	private static final String getInventory_query = "SELECT product, wholesalerPrice, available, Stock FROM inventory";
 
 	@Override
 	public void connect() {
