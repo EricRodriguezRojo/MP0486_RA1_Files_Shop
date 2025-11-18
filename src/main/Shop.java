@@ -19,10 +19,11 @@ import java.util.Scanner;
 
 import dao.Dao;
 import dao.DaoImplFile;
+import dao.DaoImplJDBC;
 
 public class Shop {
 	private Amount cash = new Amount(100.00);
-	private Dao dao = new DaoImplFile();
+	private Dao dao = new DaoImplJDBC();
 //	private Product[] inventory;
 	private ArrayList<Product> inventory;
 	private int numberProducts;
@@ -35,6 +36,7 @@ public class Shop {
 	public Shop() {
 		inventory = new ArrayList<Product>();
 		sales = new ArrayList<Sale>();
+		dao.connect();
 	}
 	
 	
@@ -51,7 +53,7 @@ public class Shop {
 
 
 
-	public ArrayList<Product> getInventory() {
+	public ArrayList<Product> getInventory()  {
 		return inventory;
 	}
 
