@@ -96,9 +96,33 @@ public class DaoImplJDBC implements Dao {
 	}
 
 	@Override
-	public boolean writeInventory(ArrayList<Product> ProductsList) {
-		return false;
+	public boolean writeInventory(ArrayList<Product> productsList) {
 
+	    String sql = "INSERT INTO historical_inventory (id_product, name, wholesalerPrice, available, stock, created_at) "
+	            + "VALUES (?, ?, ?, ?, ?, NOW())";
+
+	    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+	        for (Product p : productsList) {
+
+	            ps.setInt(1, p.getId());
+	            ps.setString(2, p.getName());
+	            ps.setDouble(3, p.getWholesalerPrice().getValue());
+	            ps.setBoolean(4, p.isAvailable());
+	            ps.setInt(5, p.getStock());
+
+	            ps.addBatch();
+	        }
+
+	        ps.executeBatch();
+	        return true;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
+
+
 
 }
