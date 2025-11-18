@@ -102,7 +102,6 @@ public class DaoImplJDBC implements Dao {
 	            + "VALUES (?, ?, ?, ?, ?, NOW())";
 
 	    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-
 	        for (Product p : productsList) {
 
 	            ps.setInt(1, p.getId());
