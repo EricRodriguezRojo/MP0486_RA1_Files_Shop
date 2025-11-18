@@ -81,7 +81,7 @@ public class DaoImplJDBC implements Dao {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     String name = resultSet.getString("product");
-                    double price = resultSet.getDouble("price");
+                    double price = resultSet.getDouble("wholesalerPrice");
                     boolean available = resultSet.getBoolean("available"); 
                     int stock = resultSet.getInt("Stock");
                     Product product = new Product(name, new Amount(price), available, stock);
