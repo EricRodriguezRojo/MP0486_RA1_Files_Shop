@@ -39,6 +39,10 @@ public class Shop {
 		dao.connect();
 	}
 	
+	public Dao getDao() {
+	    return this.dao;
+	}
+
 	
 
 	public Amount getCash() {
@@ -51,7 +55,7 @@ public class Shop {
 		this.cash = cash;
 	}
 
-
+	
 
 	public ArrayList<Product> getInventory()  {
 		return inventory;
@@ -229,68 +233,74 @@ public class Shop {
 	 * add a new product to inventory getting data from console
 	 */
 	public void addProduct() {
-		if (isInventoryFull()) {
-			System.out.println("No se pueden añadir más productos");
-			return;
-		}
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("Nombre: ");
-		String name = scanner.nextLine();
-		System.out.print("Precio mayorista: ");
-		double wholesalerPrice = scanner.nextDouble();
-		System.out.print("Stock: ");
-		int stock = scanner.nextInt();
+	    Scanner scanner = new Scanner(System.in);
+	    System.out.print("Nombre: ");
+	    String name = scanner.nextLine();
+	    System.out.print("Precio mayorista: ");
+	    double wholesalerPrice = scanner.nextDouble();
+	    System.out.print("Stock: ");
+	    int stock = scanner.nextInt();
 
-		addProduct(new Product(name, new Amount(wholesalerPrice), true, stock));
+	    Product p = new Product(name, new Amount(wholesalerPrice), true, stock);
+
+	    if (dao.addProduct(p)) {
+	        inventory.add(p);
+	        System.out.println("Producto añadido correctamente.");
+	    } else {
+	        System.out.println("Error al añadir producto a la base de datos.");
+	    }
 	}
+
 
 	/**
 	 * remove a new product to inventory getting data from console
 	 */
 	public void removeProduct() {
-		if (inventory.size() == 0) {
-			System.out.println("No se pueden eliminar productos, inventario vacio");
-			return;
-		}
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("Seleccione un nombre de producto: ");
-		String name = scanner.next();
-		Product product = findProduct(name);
+	    Scanner scanner = new Scanner(System.in);
+	    System.out.print("Nombre del producto a eliminar: ");
+	    String name = scanner.next();
+	    Product p = findProduct(name);
 
-		if (product != null) {
-			// remove it
-			if (inventory.remove(product)) {
-				System.out.println("El producto " + name + " ha sido eliminado");
+	    if (p == null) {
+	        System.out.println("Producto no encontrado.");
+	        return;
+	    }
 
-			} else {
-				System.out.println("No se ha encontrado el producto con nombre " + name);
-			}
-		} else {
-			System.out.println("No se ha encontrado el producto con nombre " + name);
-		}
+	    if (dao.deleteProduct(p.getName())) {
+	        inventory.remove(p);
+	        System.out.println("Producto eliminado correctamente.");
+	    } else {
+	        System.out.println("Error al eliminar en BBDD.");
+	    }
+
 	}
+
 
 	/**
 	 * add stock for a specific product
 	 */
 	public void addStock() {
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("Seleccione un nombre de producto: ");
-		String name = scanner.next();
-		Product product = findProduct(name);
+	    Scanner scanner = new Scanner(System.in);
+	    System.out.print("Seleccione un nombre de producto: ");
+	    String name = scanner.next();
+	    Product p = findProduct(name);
 
-		if (product != null) {
-			// ask for stock
-			System.out.print("Seleccione la cantidad a añadir: ");
-			int stock = scanner.nextInt();
-			// update stock product
-			product.setStock(product.getStock() + stock);
-			System.out.println("El stock del producto " + name + " ha sido actualizado a " + product.getStock());
+	    if (p == null) {
+	        System.out.println("Producto no encontrado");
+	        return;
+	    }
 
-		} else {
-			System.out.println("No se ha encontrado el producto con nombre " + name);
-		}
+	    System.out.print("Cantidad a añadir: ");
+	    int amount = scanner.nextInt();
+	    p.setStock(p.getStock() + amount);
+
+	    if (dao.updateProduct(p)) {
+	        System.out.println("Stock actualizado.");
+	    } else {
+	        System.out.println("Error al actualizar stock en BBDD.");
+	    }
 	}
+
 
 	/**
 	 * set a product as expired
