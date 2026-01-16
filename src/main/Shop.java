@@ -19,11 +19,12 @@ import java.util.Scanner;
 
 import dao.Dao;
 import dao.DaoImplFile;
+import dao.DaoImplHibernate;
 import dao.DaoImplJDBC;
 
 public class Shop {
 	private Amount cash = new Amount(100.00);
-	private Dao dao = new DaoImplJDBC();
+	private Dao dao = new DaoImplHibernate();
 //	private Product[] inventory;
 	private ArrayList<Product> inventory;
 	private int numberProducts;
@@ -34,9 +35,16 @@ public class Shop {
 	final static double TAX_RATE = 1.04;
 
 	public Shop() {
-		inventory = new ArrayList<Product>();
-		sales = new ArrayList<Sale>();
-		dao.connect();
+	    inventory = new ArrayList<Product>();
+	    sales = new ArrayList<Sale>();
+	    
+	    dao.connect();
+	    
+	    ArrayList<Product> loadedInventory = dao.getInventory();
+	    if (loadedInventory != null) {
+	        this.inventory = loadedInventory;
+	        this.numberProducts = this.inventory.size();
+	    }
 	}
 	
 	public Dao getDao() {
@@ -138,6 +146,13 @@ public class Shop {
 			opcion = scanner.nextInt();
 
 			switch (opcion) {
+			case 0: 
+		        if (shop.writeInventory()) {
+		            System.out.println("Inventario exportado correctamente a historical_inventory.");
+		        } else {
+		            System.out.println("Error al exportar el inventario.");
+		        }
+		        break;
 			case 1:
 				shop.showCash();
 				break;
