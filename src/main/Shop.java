@@ -21,10 +21,11 @@ import dao.Dao;
 import dao.DaoImplFile;
 import dao.DaoImplHibernate;
 import dao.DaoImplJDBC;
+import dao.DaoImplMongoDB;
 
 public class Shop {
 	private Amount cash = new Amount(100.00);
-	private Dao dao = new DaoImplHibernate();
+	private Dao dao = new DaoImplMongoDB();
 //	private Product[] inventory;
 	private ArrayList<Product> inventory;
 	private int numberProducts;

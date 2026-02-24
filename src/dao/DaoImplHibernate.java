@@ -67,7 +67,7 @@ public class DaoImplHibernate implements Dao {
 	    try {
 	        for (Product p : productsList) {
 	            ProductHistory history = new ProductHistory(p);
-	            session.persist(history);
+	            session.persist(null);
 	        }
 	        tx.commit();
 	        return true;
