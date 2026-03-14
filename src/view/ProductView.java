@@ -205,7 +205,7 @@ public class ProductView extends JDialog implements ActionListener{
                         JOptionPane.showMessageDialog(null, "Producto no existe", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                     } else {
-                        if (shop.getDao().deleteProduct(product.getName())) {
+                        if (shop.getDao().deleteProduct(product.getId())) {
                             shop.getInventory().remove(product);
                             JOptionPane.showMessageDialog(null, "Producto eliminado correctamente", "Info",
                                     JOptionPane.INFORMATION_MESSAGE);

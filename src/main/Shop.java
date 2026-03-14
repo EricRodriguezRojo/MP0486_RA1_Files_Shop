@@ -273,16 +273,16 @@ public class Shop {
 	 */
 	public void removeProduct() {
 	    Scanner scanner = new Scanner(System.in);
-	    System.out.print("Nombre del producto a eliminar: ");
-	    String name = scanner.next();
-	    Product p = findProduct(name);
+	    System.out.print("ID del producto a eliminar: ");
+	    int id = scanner.nextInt();
+	    Product p = findProductById(id);
 
 	    if (p == null) {
 	        System.out.println("Producto no encontrado.");
 	        return;
 	    }
 
-	    if (dao.deleteProduct(p.getName())) {
+	    if (dao.deleteProduct(p.getId())) {
 	        inventory.remove(p);
 	        System.out.println("Producto eliminado correctamente.");
 	    } else {
@@ -539,6 +539,15 @@ public class Shop {
 		}
 		return null;
 
+	}
+
+	public Product findProductById(int id) {
+		for (int i = 0; i < inventory.size(); i++) {
+			if (inventory.get(i) != null && inventory.get(i).getId() == id) {
+				return inventory.get(i);
+			}
+		}
+		return null;
 	}
 	
 	public boolean writeInventory() {

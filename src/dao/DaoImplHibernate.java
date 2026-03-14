@@ -115,7 +115,7 @@ public class DaoImplHibernate implements Dao {
 	}
 
 	@Override
-	public boolean deleteProduct(String name) {
+	public boolean deleteProduct(int name) {
 	    Session session = sessionFactory.openSession();
 	    Transaction tx = null;
 	    try {

@@ -151,7 +151,7 @@ public class DaoImplFile implements Dao {
 	}
 
 	@Override
-	public boolean deleteProduct(String name) {
+	public boolean deleteProduct(int name) {
 	    return false;
 	}
 

@@ -164,10 +164,10 @@ public class DaoImplJDBC implements Dao {
 	
 	
 	@Override
-	public boolean deleteProduct(String name) {
+	public boolean deleteProduct(int name) {
 	    String query = "DELETE FROM inventory WHERE product = ?";
 	    try (PreparedStatement ps = connection.prepareStatement(query)) {
-	        ps.setString(1, name);
+	        ps.setInt(1, name);
 	        int rowsAffected = ps.executeUpdate();
 	        return rowsAffected > 0;
 	    } catch (SQLException e) {

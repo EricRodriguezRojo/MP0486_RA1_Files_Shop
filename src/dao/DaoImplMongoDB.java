@@ -111,16 +111,62 @@ public class DaoImplMongoDB implements Dao {
 
     @Override
     public boolean addProduct(Product p) {
-        return false;
+        try {
+            connect();
+            MongoCollection<Document> collection = db.getCollection("inventory");
+            Document priceDoc = new Document("value", p.getWholesalerPrice().getValue())
+                                      .append("currency", "€");
+  
+            Document doc = new Document("id", p.getId())
+                                 .append("name", p.getName())
+                                 .append("wholesalerPrice", priceDoc)
+                                 .append("available", p.isAvailable())
+                                 .append("stock", p.getStock());
+            collection.insertOne(doc);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            disconnect();
+        }
     }
 
     @Override
     public boolean updateProduct(Product p) {
-        return false;
+        try {
+            connect();
+            MongoCollection<Document> collection = db.getCollection("inventory");
+            Bson filter = eq("id", p.getId());
+            Bson updates = Updates.combine(
+                Updates.set("name", p.getName()),
+                Updates.set("wholesalerPrice.value", p.getWholesalerPrice().getValue()),
+                Updates.set("available", p.isAvailable()),
+                Updates.set("stock", p.getStock())
+            );
+            collection.updateOne(filter, updates);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            disconnect();
+        }
     }
-
+    
     @Override
-    public boolean deleteProduct(String name) {
-    return false;
+    public boolean deleteProduct(int productId) {
+        try {
+            connect();
+            MongoCollection<Document> collection = db.getCollection("inventory");
+            Bson filter = eq("id", productId);
+            long deletedCount = collection.deleteOne(filter).getDeletedCount();
+            return deletedCount > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            disconnect();
+        }
     }
 }
