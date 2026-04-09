@@ -1,5 +1,9 @@
 package model;
 
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
+
 public abstract class Person {
 	protected String name;
 	
